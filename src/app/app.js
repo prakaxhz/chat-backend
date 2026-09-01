@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Health Check Route
-app.get('/api/health', (req, res) => {
+app.get('/', (req, res) => {
   res.status(StatusCodes.OK).json({ 
     success: true, 
     message: 'Server is healthy and running' 
