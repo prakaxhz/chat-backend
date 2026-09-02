@@ -7,8 +7,8 @@ const { StatusCodes } = require('http-status-codes');
 const setTokenCookie = (res, token) => {
   res.cookie('token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true, // Must be true for sameSite 'none'
+    sameSite: 'none', // Required for cross-origin (localhost -> vercel)
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 };
@@ -90,6 +90,8 @@ exports.logout = asyncHandler(async (req, res) => {
     res.cookie('token', 'none', {
       expires: new Date(Date.now() + 10 * 1000), // expires in 10 seconds
       httpOnly: true,
+      secure: true,
+      sameSite: 'none'
     });
   }
 
