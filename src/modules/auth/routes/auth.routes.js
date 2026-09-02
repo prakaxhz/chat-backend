@@ -15,6 +15,7 @@ const {
 // Public routes
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/login', validate(loginSchema), authController.login);
+router.post('/logout', authController.logout);
 router.post('/verify-email', validate(verifyEmailSchema), authController.verifyEmail);
 router.post('/resend-otp', validate(resendOtpSchema), authController.resendOtp);
 

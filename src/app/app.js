@@ -1,15 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const { StatusCodes } = require('http-status-codes');
 
 const app = express();
 
 // Global Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL, // Frontend URL
+  credentials: true // Allow cookies to be sent back and forth
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Health Check Route
 app.get('/', (req, res) => {

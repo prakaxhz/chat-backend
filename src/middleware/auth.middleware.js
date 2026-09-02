@@ -11,15 +11,17 @@ const asyncHandler = require('../shared/utils/asyncHandler');
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  // 1. Check if token exists in headers
-  if (
+  // 1. Check if token exists in cookies OR headers (fallback)
+  if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  } else if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  if (!token) {
+  if (!token || token === 'none') {
     throw new ApiError(
       StatusCodes.UNAUTHORIZED,
       'You are not logged in! Please log in to get access.'
@@ -66,4 +68,3 @@ const protect = asyncHandler(async (req, res, next) => {
 module.exports = {
   protect
 };
-
