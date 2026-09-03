@@ -60,11 +60,8 @@ channelSchema.index(
 );
 
 // Add a query middleware for soft deletes so that `deleted_at: null` is the default for find operations
-channelSchema.pre(/^find/, function(next) {
-  // `this` refers to the current query
-  this.find({ deleted_at: null });
-  next();
+channelSchema.pre(/^find/, function() {
+  this.where({ deleted_at: null });
 });
 
 module.exports = mongoose.model('Channel', channelSchema);
-

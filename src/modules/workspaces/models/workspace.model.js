@@ -48,11 +48,8 @@ const workspaceSchema = new mongoose.Schema({
 });
 
 // Add a query middleware for soft deletes so that `deleted_at: null` is the default for find operations
-workspaceSchema.pre(/^find/, function(next) {
-  // `this` refers to the current query
-  // Only return documents where deleted_at is null
-  this.find({ deleted_at: null });
-  next();
+workspaceSchema.pre(/^find/, function() {
+  this.where({ deleted_at: null });
 });
 
 module.exports = mongoose.model('Workspace', workspaceSchema);

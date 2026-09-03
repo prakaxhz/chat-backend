@@ -3,6 +3,7 @@ const config = require('../config/env');
 const { StatusCodes } = require('http-status-codes');
 
 const errorHandler = (err, req, res, next) => {
+  console.error("ERROR CAUGHT:", err);
   let error = err;
 
   if (!(error instanceof ApiError)) {

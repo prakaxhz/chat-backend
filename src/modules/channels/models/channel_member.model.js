@@ -44,10 +44,8 @@ channelMemberSchema.index(
   { unique: true, partialFilterExpression: { deleted_at: null } }
 );
 
-channelMemberSchema.pre(/^find/, function(next) {
-  this.find({ deleted_at: null });
-  next();
+channelMemberSchema.pre(/^find/, function() {
+  this.where({ deleted_at: null });
 });
 
 module.exports = mongoose.model('ChannelMember', channelMemberSchema);
-
