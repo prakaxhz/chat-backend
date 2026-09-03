@@ -7,7 +7,18 @@ const config = require('../config/env');
  */
 const socketAuthMiddleware = async (socket, next) => {
   try {
-    const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(' ')[1];
+    let token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(' ')[1];
+
+    if (!token && socket.handshake.headers?.cookie) {
+      const cookies = socket.handshake.headers.cookie.split(';');
+      for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'token') {
+          token = value;
+          break;
+        }
+      }
+    }
 
     if (!token) {
       return next(new Error('Authentication error: Token not provided'));
@@ -42,4 +53,3 @@ const socketAuthMiddleware = async (socket, next) => {
 };
 
 module.exports = socketAuthMiddleware;
-
