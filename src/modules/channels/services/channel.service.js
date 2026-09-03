@@ -2,7 +2,7 @@ const channelRepository = require('../repositories/channel.repository');
 const ApiError = require('../../../shared/utils/ApiError');
 const { StatusCodes } = require('http-status-codes');
 const { generateChannelCode } = require('../../../shared/utils/codeGenerator');
-
+const channelEvents = require('../events/channel.events');
 const channelMemberRepository = require('../repositories/channel_member.repository');
 
 class ChannelService {
@@ -29,6 +29,9 @@ class ChannelService {
     });
 
     await channelMemberRepository.addMember(channel._id, createdByMemberId, createdByMemberId);
+
+    // Broadcast to all workspace members in a single batch via events module
+    await channelEvents.emitChannelCreated(channel);
 
     return channel;
   }
@@ -60,7 +63,12 @@ class ChannelService {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'No valid fields provided for update');
     }
 
-    return await channelRepository.updateById(channelId, allowedUpdates);
+    const updatedChannel = await channelRepository.updateById(channelId, allowedUpdates);
+
+    // Broadcast to all workspace members in a single batch via events module
+    await channelEvents.emitChannelUpdated(updatedChannel);
+
+    return updatedChannel;
   }
 
   async toggleArchive(channelId, isArchived) {
@@ -69,7 +77,16 @@ class ChannelService {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Channel not found');
     }
 
-    return await channelRepository.updateById(channelId, { is_active: !isArchived });
+    const updatedChannel = await channelRepository.updateById(channelId, { is_active: !isArchived });
+
+    // Broadcast to all workspace members in a single batch via events module
+    if (isArchived) {
+      await channelEvents.emitChannelArchived(updatedChannel);
+    } else {
+      await channelEvents.emitChannelUnarchived(updatedChannel);
+    }
+
+    return updatedChannel;
   }
 }
 

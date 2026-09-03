@@ -13,6 +13,11 @@ const initializeSocket = (server) => {
 
   io.on('connection', (socket) => {
     console.log(`User connected: ${socket.user.name} (${socket.id})`);
+    
+    // Automatically join the user to their personal room for direct events
+    const userRoom = `user.${socket.user.id || socket.user._id}`;
+    socket.join(userRoom);
+    console.log(`User ${socket.user.name} joined personal room: ${userRoom}`);
 
     socket.on('disconnect', () => {
       console.log(`User disconnected: ${socket.user.name} (${socket.id})`);

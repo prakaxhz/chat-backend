@@ -31,6 +31,10 @@ class WorkspaceRepository {
     return await Workspace.findOne({ code });
   }
 
+  async getWorkspaceMembers(workspaceId) {
+    return await WorkspaceMember.find({ workspace_id: workspaceId });
+  }
+
   async getUserWorkspaces(userId) {
     // Find all memberships for this user and populate the workspace details and role details
     const memberships = await WorkspaceMember.find({ user_id: userId })
