@@ -7,7 +7,7 @@ const WorkspaceMember = require('../modules/workspaces/models/workspace_member.m
 const mongoose = require('mongoose');
 
 exports.requireWorkspace = asyncHandler(async (req, res, next) => {
-  const workspaceIdentifier = req.headers['X-Workspace-ID'];
+  const workspaceIdentifier = req.header('X-Workspace-ID');
 
   if (!workspaceIdentifier) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'X-Workspace-ID header is required');

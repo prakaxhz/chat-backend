@@ -132,15 +132,15 @@ class AuthService {
 
     const otpCode = await otpService.generate(user._id, 'PASSWORD_RESET');
 
-    const { getPasswordResetEmailTemplate } = require('../../../shared/templates/email.templates');
-    const emailContent = getPasswordResetEmailTemplate(otpCode);
+    // const { getPasswordResetEmailTemplate } = require('../../../shared/templates/email.templates');
+    // const emailContent = getPasswordResetEmailTemplate(otpCode);
 
-    emailQueue.add('sendOtpEmail', {
-      to: user.email,
-      subject: 'Password Reset Request',
-      text: emailContent.text,
-      html: emailContent.html
-    });
+    // emailQueue.add('sendOtpEmail', {
+    //   to: user.email,
+    //   subject: 'Password Reset Request',
+    //   text: emailContent.text,
+    //   html: emailContent.html
+    // });
 
     return true;
   }
