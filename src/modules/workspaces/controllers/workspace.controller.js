@@ -25,7 +25,7 @@ exports.listUserWorkspaces = asyncHandler(async (req, res) => {
   const workspaces = await workspaceService.getUserWorkspaces(req.user.id);
   
   res.status(StatusCodes.OK).json(
-    new ApiResponse(StatusCodes.OK, { workspaces }, 'Workspaces retrieved successfully')
+    new ApiResponse(StatusCodes.OK, workspaces, 'Workspaces retrieved successfully')
   );
 });
 
